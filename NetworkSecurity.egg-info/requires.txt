@@ -1,7 +1,0 @@
-python-dotenv
-pandas
-numpy
-matplotlib
-seaborn
-pymongo
-certifi
