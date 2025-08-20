@@ -2,6 +2,9 @@ import os,sys
 import pandas as pd
 import numpy as np
 import mlflow
+import dagshub
+import joblib
+dagshub.init(repo_owner='Vansh2117', repo_name='NetworkSecurity', mlflow=True)
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsClassifier
@@ -39,7 +42,8 @@ class ModelTrainer:
             mlflow.log_metric("f1_score",f1_score)
             mlflow.log_metric("precision",precision_score)
             mlflow.log_metric("recall",recall_score)
-            mlflow.sklearn.log_model(best_model,"model")
+            joblib.dump(best_model,"best_model.pkl")
+            mlflow.log_artifact("best_model.pkl",artifact_path="model")
                               
     def train_model(self,x_train,y_train,x_test,y_test):
         try:
@@ -95,7 +99,8 @@ class ModelTrainer:
             os.makedirs(model_dir_path,exist_ok=True)
             Network_Model=NetworkModel(preprocessor=preprocessor,model=best_model)
             save_object(self.model_trainer_config.trained_model_file_path,obj=Network_Model)
-        
+            save_object("final_model/model.pkl",best_model)
+
             # Model Trainer Artifact
             model_trainer_artifact=ModelTrainerArtifact(trained_model_file_path=self.model_trainer_config.trained_model_file_path,
                                 train_metric_artifact=classification_train_metric,
