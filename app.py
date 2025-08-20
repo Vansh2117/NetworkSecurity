@@ -52,6 +52,7 @@ async def train_route():
 async def predict_route(request:Request,file:UploadFile=File(...)):
     try:
         df=pd.read_csv(file.file)
+        # we can read this from the cloud platform directly and removed it from the local dir
         preprocessor=load_object("final_model/preprocessor.pkl")
         final_model=load_object("final_model/model.pkl")
         network_model=NetworkModel(preprocessor=preprocessor,model=final_model)
